@@ -5,12 +5,12 @@
     import { onMount } from 'svelte';
     import { initializeApp, getApps, getApp } from "firebase/app";
     import { getDatabase, ref as dbRef, get, onChildAdded, onChildRemoved, onChildChanged, update, set, child } from "firebase/database";
-    import { getAuth, onAuthStateChanged } from "firebase/auth";
+    import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
     import { firebaseConfig } from "$lib/firebaseConfig";
 
     // Initialize Firebase
     const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-    const db = getDatabase(app);
+    const db = getDatabase(app); 
     const auth = getAuth(app);
 
     let isProfileOpen = false;
@@ -21,7 +21,7 @@
     onMount(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                goto('/signin');
+                goto('/');
                 return;
             }
             loadImages();
@@ -423,16 +423,13 @@
                                 <span>Settings</span>
                             </button>
                             <button
-                                on:click={() => {
-                                    // Add sign out logic here
+                                on:click={async () => {
+                                    await signOut(auth);
                                     goto('/');
                                 }}
-                                class="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center space-x-3 text-red-500"
+                                class="text-red-500 hover:bg-red-100 w-full text-left px-4 py-2"
                             >
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                                <span>Sign Out</span>
+                                Sign Out
                             </button>
                         </div>
                     </div>

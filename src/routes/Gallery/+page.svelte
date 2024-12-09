@@ -51,7 +51,7 @@
     onMount(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (!user) {
-                goto('/signin');
+                goto('/');
                 return;
             }
             loadImages();
@@ -685,7 +685,7 @@
                         <button
                             on:click={async () => {
                                 await signOut(auth);
-                                goto('/signin');
+                                goto('/');
                             }}
                             class="text-red-500 hover:bg-red-100 w-full text-left px-4 py-2"
                         >
